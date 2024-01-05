@@ -1,5 +1,5 @@
 locals {
-  safe_hostname = replace(var.hostname, ".", "-")
+  safe_hostname = replace(var.hostname[0], ".", "-")
 }
 
 resource "google_compute_url_map" "https_url_map" {
@@ -18,7 +18,7 @@ resource "google_compute_managed_ssl_certificate" "certificate" {
   name     = "${local.safe_hostname}-managed-certificate"
 
   managed {
-    domains = [var.hostname]
+    domains = var.hostname
   }
 }
 

@@ -1,6 +1,6 @@
 variable "hostname" {
-  description = "The name of the website and the Cloud Storage bucket to create (e.g. static.foo.com)."
-  type        = string
+  description = "The name(s) of the website(s) and the Cloud Storage bucket to create (e.g. static.foo.com)."
+  type        = list(any)
 }
 
 variable "host_redirect" {
