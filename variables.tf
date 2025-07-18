@@ -9,25 +9,30 @@ variable "host_redirect" {
 }
 
 variable "https_redirect" {
+  default     = true
   description = "Issue TLS certificate and enable HTTPS"
   type        = bool
-  default     = true
 }
 
 variable "path_redirect" {
+  default     = ""
   description = "The target path to redirect"
   type        = string
-  default     = ""
+}
+
+variable "project" {
+  description = "The GCP project ID"
+  type        = string
 }
 
 variable "strip_query" {
+  default     = false
   description = "Strip URL query parameters"
   type        = bool
-  default     = false
 }
 
 variable "redirect_response_code" {
+  default     = "MOVED_PERMANENTLY_DEFAULT"
   description = "HTTP status code to use for the redirect"
   type        = string
-  default     = "MOVED_PERMANENTLY_DEFAULT"
 }

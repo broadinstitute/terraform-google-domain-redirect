@@ -3,7 +3,8 @@ locals {
 }
 
 resource "google_compute_url_map" "https_url_map" {
-  name = "${local.safe_hostname}-https-url-map"
+  name    = "${local.safe_hostname}-https-url-map"
+  project = var.project
 
   default_url_redirect {
     host_redirect          = var.host_redirect
@@ -14,8 +15,9 @@ resource "google_compute_url_map" "https_url_map" {
 }
 
 resource "google_compute_managed_ssl_certificate" "certificate" {
-  provider = google-beta
   name     = "${local.safe_hostname}-managed-certificate"
+  project  = var.project
+  provider = google-beta
 
   managed {
     domains = var.hostname
@@ -24,12 +26,14 @@ resource "google_compute_managed_ssl_certificate" "certificate" {
 
 resource "google_compute_target_https_proxy" "https_proxy" {
   name             = "${local.safe_hostname}-https-proxy"
-  url_map          = google_compute_url_map.https_url_map.self_link
+  project          = var.project
   ssl_certificates = [google_compute_managed_ssl_certificate.certificate.self_link]
+  url_map          = google_compute_url_map.https_url_map.self_link
 }
 
 resource "google_compute_url_map" "http_url_map" {
-  name = "${local.safe_hostname}-to-http-url-map"
+  name    = "${local.safe_hostname}-to-http-url-map"
+  project = var.project
 
   default_url_redirect {
     host_redirect          = var.host_redirect
@@ -42,25 +46,29 @@ resource "google_compute_url_map" "http_url_map" {
 
 resource "google_compute_target_http_proxy" "http_proxy" {
   name    = "${local.safe_hostname}-http-proxy"
+  project = var.project
   url_map = google_compute_url_map.http_url_map.self_link
 }
 
 resource "google_compute_global_address" "public_address" {
   name         = "${local.safe_hostname}-public-address"
+  project      = var.project
   ip_version   = "IPV4"
   address_type = "EXTERNAL"
 }
 
 resource "google_compute_global_forwarding_rule" "global_forwarding_https_rule" {
-  name       = "${local.safe_hostname}-global-forwarding-https-rule"
-  target     = google_compute_target_https_proxy.https_proxy.self_link
   ip_address = google_compute_global_address.public_address.address
+  name       = "${local.safe_hostname}-global-forwarding-https-rule"
   port_range = "443"
+  project    = var.project
+  target     = google_compute_target_https_proxy.https_proxy.self_link
 }
 
 resource "google_compute_global_forwarding_rule" "global_forwarding_http_rule" {
-  name       = "${local.safe_hostname}-global-forwarding-http-rule"
-  target     = google_compute_target_http_proxy.http_proxy.self_link
   ip_address = google_compute_global_address.public_address.address
+  name       = "${local.safe_hostname}-global-forwarding-http-rule"
   port_range = "80"
+  project    = var.project
+  target     = google_compute_target_http_proxy.http_proxy.self_link
 }
