@@ -28,6 +28,7 @@ resource "google_compute_target_https_proxy" "https_proxy" {
   name             = "${local.safe_hostname}-https-proxy"
   project          = var.project
   ssl_certificates = [google_compute_managed_ssl_certificate.certificate.self_link]
+  ssl_policy       = var.ssl_policy
   url_map          = google_compute_url_map.https_url_map.self_link
 }
 

@@ -25,14 +25,20 @@ variable "project" {
   type        = string
 }
 
+variable "redirect_response_code" {
+  default     = "MOVED_PERMANENTLY_DEFAULT"
+  description = "HTTP status code to use for the redirect"
+  type        = string
+}
+
 variable "strip_query" {
   default     = false
   description = "Strip URL query parameters"
   type        = bool
 }
 
-variable "redirect_response_code" {
-  default     = "MOVED_PERMANENTLY_DEFAULT"
-  description = "HTTP status code to use for the redirect"
+variable "ssl_policy" {
+  default     = null
+  description = "The SSL policy to use for the redirects."
   type        = string
 }
