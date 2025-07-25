@@ -21,11 +21,10 @@ Google Cloud DNS does not have built-in support for 30x redirects. There has bee
 
 * Terraform 0.14 or higher.
 * `google` provider 3.67.0 or higher.
-* `google-beta` provider 3.67.0 or higher.
 
 ## Usage
 
-```hcl-terraform
+```Terraform
 module "www_example" {
   source        = "simplycubed/domain-redirect/google"
   hostname      = "www.${var.base_domain}"
